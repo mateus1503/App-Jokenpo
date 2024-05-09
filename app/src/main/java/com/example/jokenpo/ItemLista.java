@@ -2,13 +2,15 @@ package com.example.jokenpo;
 
 public class ItemLista {
     private String nome;
-    private int jogada;
-    private String resultado;
+    private int vitorias;
+    private int empates;
+    private int derrotas;
 
-    public ItemLista(String nome, int jogada, String resultado) {
+    public ItemLista(String nome, int vitorias, int empates, int derrotas) {
         this.nome = nome;
-        this.jogada = jogada;
-        this.resultado = resultado;
+        this.vitorias = vitorias;
+        this.empates = empates;
+        this.derrotas = derrotas;
     }
 
     public String getNome() {
@@ -19,19 +21,27 @@ public class ItemLista {
         this.nome = nome;
     }
 
-    public int getJogada() {
-        return jogada;
+    public int getVitorias() {
+        return vitorias;
     }
 
-    public void setJogada(int jogada) {
-        this.jogada = jogada;
+    public void setVitorias(int vitorias) {
+        this.vitorias = vitorias;
     }
 
-    public String getResultado() {
-        return resultado;
+    public int getEmpates() {
+        return empates;
     }
 
-    public void setResultado(String resultado) {
-        this.resultado = resultado;
+    public void setEmpates(int empates) {
+        this.empates = empates;
+    }
+
+    public int getDerrotas() {
+        return derrotas;
+    }
+
+    public void setDerrotas(int derrotas) {
+        this.derrotas = derrotas;
     }
 }

@@ -18,6 +18,7 @@ public class Controller {
     private Random random = new Random();
     private int sorteio = random.nextInt(3);
     private String resultadoPartida;
+    int resultado;
     private static final String SHARED_PREFS = "jokenpo_preferences";
     private static final String GAME_KEY = "partidas";
     private static final String VITORIA_KEY = "vitorias";
@@ -43,7 +44,7 @@ public class Controller {
     }
 
     public void jogar(int escolha, TextView textViewResultadoJogo) {
-        int resultado = (sorteio - escolha + 3) % 3;
+        resultado = (sorteio - escolha + 3) % 3;
 
         int fraseResultado = 0;
         if (resultado == 0) {
@@ -58,55 +59,40 @@ public class Controller {
         }
 
         textViewResultadoJogo.setText(fraseResultado);
-    }
-
-    public void jogar1(int escolha, TextView textViewResultadoJogo, SharedPreferences sp, String nomeJogador) {
-        int vitoria = sp.getInt(VITORIA_KEY + nomeJogador, 0);
-        int empate = sp.getInt(EMPATE_KEY + nomeJogador, 0);
-        int derrota = sp.getInt(DERROTA_KEY + nomeJogador, 0);
-        SharedPreferences.Editor editor = sp.edit();
-
-        int resultado = (sorteio - escolha + 3) % 3;
-
-        int fraseResultado = 0;
-        if (resultado == 0) {
-            empate++;
-            resultadoPartida = "Empatou";
-            fraseResultado = R.string.empate;
-        } else if (resultado == 1) {
-            derrota++;
-            resultadoPartida = "Perdeu";
-            fraseResultado = R.string.voc_perdeu;
-        } else {
-            vitoria++;
-            resultadoPartida = "Vitória";
-            fraseResultado = R.string.voc_venceu;
-        }
-
-        textViewResultadoJogo.setText(fraseResultado);
-        editor.putInt(VITORIA_KEY + nomeJogador, vitoria);
-        editor.putInt(EMPATE_KEY + nomeJogador, empate);
-        editor.putInt(DERROTA_KEY + nomeJogador, derrota);
     }
 
     public void salvar(SharedPreferences sp, String nomeJogador) {
+        int vitoria = sp.getInt(VITORIA_KEY + nomeJogador, 0);
+        int empate = sp.getInt(EMPATE_KEY + nomeJogador, 0);
+        int derrota = sp.getInt(DERROTA_KEY + nomeJogador, 0);
         int jogadas = sp.getInt(GAME_KEY + nomeJogador, 0);
         jogadas++;
 
-        ArrayList<ItemLista> listaJogadas = recuperar(sp, nomeJogador);
-        listaJogadas.add(new ItemLista(nomeJogador, jogadas, resultadoPartida));
+        if (resultado == 0) {
+            empate++;
+        } else if (resultado == 1) {
+            derrota++;
+        } else {
+            vitoria++;
+        }
+
+        ArrayList<ItemLista> listaJogadas = new ArrayList<>();
+        listaJogadas.add(new ItemLista(nomeJogador, vitoria, empate, derrota));
 
         SharedPreferences.Editor editor = sp.edit();
         Set<String> setJogadas = new HashSet<>();
 
         // Convertendo a lista de objetos ItemLista para uma lista de strings antes de salvar
         for (ItemLista item : listaJogadas) {
-            setJogadas.add(item.getNome() + " " + item.getJogada() +
-                    " " + item.getResultado());
+            setJogadas.add(item.getNome() + " "
+                    + item.getVitorias() + " " + item.getEmpates() + " " + item.getDerrotas());
         }
 
         editor.putStringSet("listajogadas_" + nomeJogador, setJogadas);
         editor.putInt(GAME_KEY + nomeJogador, jogadas);
+        editor.putInt(VITORIA_KEY + nomeJogador, vitoria);
+        editor.putInt(EMPATE_KEY + nomeJogador, empate);
+        editor.putInt(DERROTA_KEY + nomeJogador, derrota);
         editor.apply();
     }
 
@@ -118,10 +104,11 @@ public class Controller {
         for (String jogada : setJogadas) {
             String[] parts = jogada.split(" ");
             String jogador = parts[0];
-            int jogadas = Integer.parseInt(parts[1]);
-            String resultado = parts[2];
+            int vitoria = Integer.parseInt(parts[1]);
+            int empate = Integer.parseInt(parts[2]);
+            int derrota = Integer.parseInt(parts[3]);
 
-            listaJogadas.add(new ItemLista(jogador, jogadas, resultado));
+            listaJogadas.add(new ItemLista(jogador, vitoria, empate, derrota));
         }
 
         return listaJogadas;
@@ -140,10 +127,11 @@ public class Controller {
                 for (String jogada : setJogadas) {
                     String[] parts = jogada.split(" ");
                     String jogador = parts[0];
-                    int jogadas = Integer.parseInt(parts[1]);
-                    String resultado = parts[2];
+                    int vitoria = Integer.parseInt(parts[1]);
+                    int empate = Integer.parseInt(parts[2]);
+                    int derrota = Integer.parseInt(parts[3]);
 
-                    todasJogadas.add(new ItemLista(jogador, jogadas, resultado));
+                    todasJogadas.add(new ItemLista(jogador, vitoria, empate, derrota));
                 }
             }
         }

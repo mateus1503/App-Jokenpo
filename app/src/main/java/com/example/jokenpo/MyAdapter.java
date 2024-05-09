@@ -40,12 +40,14 @@ public class MyAdapter extends BaseAdapter {
         view = inflater.inflate(R.layout.item_lista, null);
 
         TextView nome = view.findViewById(R.id.nome);
-        TextView jogada = view.findViewById(R.id.jogada);
-        TextView resultado = view.findViewById(R.id.resultado);
+        TextView vitoria = view.findViewById(R.id.vitoria);
+        TextView empate = view.findViewById(R.id.empate);
+        TextView derrota = view.findViewById(R.id.derrota);
 
         nome.setText(item.getNome());
-        jogada.setText(String.valueOf(item.getJogada()));
-        resultado.setText(item.getResultado());
+        vitoria.setText(String.valueOf(item.getVitorias()));
+        empate.setText(String.valueOf(item.getEmpates()));
+        derrota.setText(String.valueOf(item.getDerrotas()));
 
         return view;
     }
